@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Change Order by Overpaid Engineer</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img">
+              <path d="M5 5.5h14v13H5z" />
+              <path d="M8 9h8M8 12h8M8 15h5" />
+            </svg>
+          </div>
+          <div>
+            <h1>Change Order by Overpaid Engineer</h1>
+            <p>Field pricing and customer approval</p>
+          </div>
+        </div>
+        <div class="top-actions no-print">
+          <button class="button quiet" id="saveDraft" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z" />
+              <path d="M17 21v-8H7v8M7 3v5h8" />
+            </svg>
+            Save
+          </button>
+          <button class="button quiet" id="clearOrder" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />
+              <path d="M10 11v5M14 11v5" />
+            </svg>
+            Clear
+          </button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="main-stack">
+          <section class="panel order-details" aria-labelledby="orderDetailsTitle">
+            <div class="section-head">
+              <h2 id="orderDetailsTitle">Order Details</h2>
+              <span class="status-pill" id="draftStatus">Ready</span>
+            </div>
+
+            <div class="field-grid">
+              <label>
+                Company
+                <input data-persist id="companyName" autocomplete="organization" />
+              </label>
+              <label>
+                Change order #
+                <input data-persist id="orderNumber" />
+              </label>
+              <label>
+                Customer
+                <input data-persist id="customerName" autocomplete="name" />
+              </label>
+              <label>
+                Phone or email
+                <input data-persist id="customerContact" autocomplete="email" />
+              </label>
+              <label class="wide">
+                Job address
+                <input data-persist id="jobAddress" autocomplete="street-address" />
+              </label>
+              <label>
+                Prepared by
+                <input data-persist id="preparedBy" autocomplete="name" />
+              </label>
+              <label>
+                Work date
+                <input data-persist id="workDate" type="date" />
+              </label>
+            </div>
+
+            <label class="stacked">
+              Customer-facing note
+              <textarea
+                data-persist
+                id="customerNote"
+                rows="3"
+              >Customer authorizes the listed change-order work and price before the work begins.</textarea>
+            </label>
+          </section>
+
+          <section class="panel item-builder no-print" aria-labelledby="addItemTitle">
+            <div class="section-head">
+              <h2 id="addItemTitle">Add Work</h2>
+              <div class="segment" role="tablist" aria-label="Item type">
+                <button class="segment-button active" data-item-mode="service" type="button">Service</button>
+                <button class="segment-button" data-item-mode="lineal" type="button">Lineal</button>
+                <button class="segment-button" data-item-mode="custom" type="button">Custom</button>
+              </div>
+            </div>
+
+            <div class="builder-grid">
+              <label data-mode-panel="service">
+                Service
+                <select id="serviceSelect"></select>
+              </label>
+
+              <label data-mode-panel="lineal" hidden>
+                Type
+                <select id="linealType"></select>
+              </label>
+
+              <label data-mode-panel="lineal" hidden>
+                Difficulty
+                <select id="linealDifficulty">
+                  <option value="Easy">Easy</option>
+                  <option value="Medium" selected>Medium</option>
+                  <option value="Hard">Hard</option>
+                </select>
+              </label>
+
+              <label data-mode-panel="custom" hidden>
+                Work description
+                <input id="customDescription" />
+              </label>
+
+              <label>
+                Quantity
+                <input id="itemQty" type="number" min="0" step="0.01" value="1" inputmode="decimal" />
+              </label>
+
+              <label>
+                Unit price
+                <input id="itemPrice" type="number" min="0" step="0.01" inputmode="decimal" />
+              </label>
+
+              <label class="wide">
+                Scope shown to customer
+                <input id="itemScope" />
+              </label>
+
+              <button class="button primary add-button" id="addItem" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+                Add
+              </button>
+            </div>
+          </section>
+
+          <section class="panel item-list" aria-labelledby="itemsTitle">
+            <div class="section-head">
+              <h2 id="itemsTitle">Approved Work</h2>
+              <span class="amount-chip" id="itemCount">0 items</span>
+            </div>
+
+            <div class="line-table" role="table" aria-label="Change order line items">
+              <div class="line-row line-header" role="row">
+                <span role="columnheader">Scope</span>
+                <span role="columnheader">Qty</span>
+                <span role="columnheader">Unit</span>
+                <span role="columnheader">Total</span>
+                <span class="no-print" role="columnheader"> </span>
+              </div>
+              <div id="itemsBody"></div>
+            </div>
+
+            <div class="empty-state" id="emptyState">No change-order work added yet.</div>
+          </section>
+        </section>
+
+        <aside class="panel approval-panel" aria-labelledby="approvalTitle">
+          <div class="section-head">
+            <h2 id="approvalTitle">Customer Approval</h2>
+          </div>
+
+          <div class="totals">
+            <div>
+              <span>Subtotal</span>
+              <strong id="subtotal">$0.00</strong>
+            </div>
+            <label class="tax-row">
+              <span>Tax / fee %</span>
+              <input data-persist id="taxRate" type="number" min="0" step="0.01" value="0" inputmode="decimal" />
+            </label>
+            <div>
+              <span>Tax / fees</span>
+              <strong id="taxAmount">$0.00</strong>
+            </div>
+            <div class="grand-total">
+              <span>Total</span>
+              <strong id="grandTotal">$0.00</strong>
+            </div>
+          </div>
+
+          <label class="stacked">
+            Customer name for approval
+            <input data-persist id="signerName" autocomplete="name" />
+          </label>
+
+          <div class="signature-block">
+            <div class="signature-label">
+              <span>Customer signature</span>
+              <button class="text-button no-print" id="clearSignature" type="button">Clear</button>
+            </div>
+            <canvas id="signaturePad" class="signature-pad"></canvas>
+            <img id="signaturePrint" class="signature-print" alt="Customer signature" />
+          </div>
+
+          <label class="stacked">
+            Field notes
+            <textarea data-persist id="fieldNotes" rows="4"></textarea>
+          </label>
+
+          <button class="button primary print-button no-print" id="printOrder" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 9V3h12v6" />
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+              <path d="M6 14h12v7H6z" />
+            </svg>
+            Print Change Order
+          </button>
+        </aside>
+      </main>
+    </div>
+
+    <div class="toast no-print" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
