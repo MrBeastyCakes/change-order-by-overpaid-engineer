@@ -7,33 +7,29 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="app-shell" data-energy="focus">
+    <div class="app-shell">
       <header class="topbar">
         <div class="brand">
           <div class="brand-mark" aria-hidden="true">
             <svg viewBox="0 0 24 24">
-              <path d="M4 18.5 12 4l8 14.5" />
-              <path d="M8.5 14.5h7M10.2 11.2h3.6" />
+              <path d="M4 19 12 4l8 15" />
+              <path d="M8.5 15h7M10.2 11.5h3.6" />
             </svg>
           </div>
           <div>
             <h1>Change Order by Overpaid Engineer</h1>
-            <p>Build custom field work, get approval, print on-site.</p>
+            <p>Blank itemized builder for field approval and print.</p>
           </div>
         </div>
 
         <div class="top-actions no-print">
-          <div class="mode-switch" aria-label="Energy mode">
-            <button class="mode-button active" data-energy-mode="focus" type="button">Focus</button>
-            <button class="mode-button" data-energy-mode="explore" type="button">Explore</button>
-          </div>
-          <button class="icon-button quiet" id="saveDraft" type="button" title="Save draft" aria-label="Save draft">
+          <button class="icon-button" id="saveDraft" type="button" title="Save draft" aria-label="Save draft">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z" />
               <path d="M17 21v-8H7v8M7 3v5h8" />
             </svg>
           </button>
-          <button class="icon-button quiet" id="clearOrder" type="button" title="New order" aria-label="New order">
+          <button class="icon-button" id="newOrder" type="button" title="New order" aria-label="New order">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />
               <path d="M10 11v5M14 11v5" />
@@ -43,17 +39,17 @@
       </header>
 
       <main class="workspace">
-        <section class="flow-column">
-          <section class="panel setup-panel" aria-labelledby="setupTitle">
+        <section class="work-column">
+          <section class="panel job-panel" aria-labelledby="jobTitle">
             <div class="section-head">
               <div>
-                <span class="step-kicker">Step 1</span>
-                <h2 id="setupTitle">Job Basics</h2>
+                <span class="step-label">Step 1</span>
+                <h2 id="jobTitle">Job Info</h2>
               </div>
               <span class="status-pill" id="draftStatus">Ready</span>
             </div>
 
-            <div class="field-grid compact">
+            <div class="field-grid">
               <label>
                 Company
                 <input data-persist id="companyName" autocomplete="organization" />
@@ -79,126 +75,84 @@
                 <input data-persist id="preparedBy" autocomplete="name" />
               </label>
               <label>
-                Work date
+                Date
                 <input data-persist id="workDate" type="date" />
               </label>
             </div>
           </section>
 
-          <div class="build-area">
-            <section class="builder-grid no-print" aria-label="Job builder">
-              <section class="panel block-lab" aria-labelledby="customTitle">
-              <div class="section-head">
-                <div>
-                  <span class="step-kicker">Step 2</span>
-                  <h2 id="customTitle">Custom Work Block</h2>
-                </div>
-                <span class="soft-chip">Field-first</span>
+          <section class="panel builder-panel no-print" aria-labelledby="builderTitle">
+            <div class="section-head">
+              <div>
+                <span class="step-label">Step 2</span>
+                <h2 id="builderTitle">Add Item</h2>
               </div>
+              <span class="hint-chip">No premade job types</span>
+            </div>
 
-              <div class="quick-custom">
-                <label class="wide">
-                  Work name
-                  <input id="customName" placeholder="Example: Replace damaged fascia board" />
-                </label>
-                <label>
-                  Area
-                  <select id="customPhase">
-                    <option>Roof</option>
-                    <option>Aluminum</option>
-                    <option>Attic</option>
-                    <option>Exterior</option>
-                    <option>Other</option>
-                  </select>
-                </label>
-                <label>
-                  Unit
-                  <select id="customUnit">
-                    <option value="each">each</option>
-                    <option value="ln ft">ln ft</option>
-                    <option value="sq ft">sq ft</option>
-                    <option value="hour">hour</option>
-                    <option value="allowance">allowance</option>
-                  </select>
-                </label>
-                <label>
-                  Qty
-                  <input id="customQty" type="number" min="0" step="0.01" value="1" inputmode="decimal" />
-                </label>
-                <label>
-                  Unit price
-                  <input id="customPrice" type="number" min="0" step="0.01" value="0" inputmode="decimal" />
-                </label>
-                <label class="wide">
-                  Customer wording
-                  <textarea id="customNote" rows="3"></textarea>
-                </label>
+            <div class="item-form">
+              <label class="wide">
+                What are you charging for?
+                <input id="itemName" placeholder="Example: Replace damaged fascia board on front elevation" />
+              </label>
+              <label>
+                Area or note
+                <input id="itemArea" placeholder="Example: Front elevation" />
+              </label>
+              <label>
+                Unit
+                <input id="itemUnit" placeholder="each, hr, ln ft" value="each" />
+              </label>
+              <label>
+                Quantity
+                <input id="itemQty" type="number" min="0" step="0.01" value="1" inputmode="decimal" />
+              </label>
+              <label>
+                Unit price
+                <input id="itemPrice" type="number" min="0" step="0.01" value="0" inputmode="decimal" />
+              </label>
+              <label class="wide">
+                Customer wording
+                <textarea id="itemDetails" rows="3" placeholder="Keep this short and customer friendly."></textarea>
+              </label>
 
-                <div class="custom-actions">
-                  <button class="button primary" id="addCustomToJob" type="button">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M12 5v14M5 12h14" />
-                    </svg>
-                    Add Custom Work
-                  </button>
-                  <button class="button secondary" id="makeReusableBlock" type="button">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M4 7h16M4 12h16M4 17h16" />
-                    </svg>
-                    Make Block
-                  </button>
-                </div>
+              <button class="button primary add-item-button" id="addItem" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+                Add Item
+              </button>
+            </div>
+          </section>
+
+          <section class="panel items-panel" aria-labelledby="itemsTitle">
+            <div class="section-head">
+              <div>
+                <span class="step-label">Step 3</span>
+                <h2 id="itemsTitle">Itemized Work</h2>
               </div>
-              </section>
+              <span class="amount-chip" id="itemCount">0 items</span>
+            </div>
 
-              <section class="panel library-panel" aria-labelledby="libraryTitle">
-                <div class="section-head">
-                  <div>
-                    <span class="step-kicker">Blocks</span>
-                    <h2 id="libraryTitle">Drag Library</h2>
-                  </div>
-                  <input class="search-input" id="blockSearch" placeholder="Search" />
-                </div>
-
-                <div class="library-tabs" aria-label="Block category">
-                  <button class="library-tab active" data-library-filter="custom" type="button">Custom</button>
-                  <button class="library-tab" data-library-filter="service" type="button">Services</button>
-                  <button class="library-tab" data-library-filter="lineal" type="button">Lineal</button>
-                </div>
-
-                <div class="block-palette" id="blockPalette"></div>
-              </section>
-            </section>
-
-            <section class="panel job-board-panel" aria-labelledby="jobBoardTitle">
-              <div class="section-head">
-                <div>
-                  <span class="step-kicker">Step 3</span>
-                  <h2 id="jobBoardTitle">Customer Job</h2>
-                </div>
-                <span class="amount-chip" id="itemCount">0 items</span>
+            <div class="items-dropzone" id="itemsDropzone">
+              <div class="empty-state" id="emptyState">
+                <strong>No items yet</strong>
+                <span>Add one line item at a time. You can edit, duplicate, remove, or reorder them.</span>
               </div>
-
-              <div class="job-dropzone" id="jobDropzone">
-                <div class="empty-board" id="emptyBoard">
-                  <strong>Custom job is empty</strong>
-                  <span>Use Add Custom Work or place blocks here.</span>
-                </div>
-                <div class="job-list" id="jobList"></div>
-              </div>
-            </section>
-          </div>
+              <div class="items-list" id="itemsList"></div>
+            </div>
+          </section>
         </section>
 
         <aside class="panel approval-panel" aria-labelledby="approvalTitle">
           <div class="section-head">
             <div>
-              <span class="step-kicker">Step 4</span>
+              <span class="step-label">Step 4</span>
               <h2 id="approvalTitle">Approve</h2>
             </div>
           </div>
 
-          <div class="total-card">
+          <div class="totals-card">
             <div>
               <span>Subtotal</span>
               <strong id="subtotal">$0.00</strong>
@@ -235,13 +189,13 @@
             Approval note
             <textarea
               data-persist
-              id="customerNote"
+              id="approvalNote"
               rows="3"
             >Customer authorizes the listed change-order work and price before the work begins.</textarea>
           </label>
 
-          <label class="stacked">
-            Field notes
+          <label class="stacked no-print">
+            Internal field notes
             <textarea data-persist id="fieldNotes" rows="3"></textarea>
           </label>
 
